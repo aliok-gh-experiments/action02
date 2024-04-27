@@ -41,6 +41,18 @@ export async function run(): Promise<void> {
           const prEvent = github.context.payload as PullRequestEvent
           core.info(`The head commit is: ${prEvent.pull_request.head.ref}`)
           core.info(`The PR number is: ${prEvent.pull_request.number}`)
+          // TODO: need pagination here
+          const reviews = await octokit.rest.pulls.listReviews({
+            owner: prEvent.repository.owner.login,
+            repo: prEvent.repository.name,
+            pull_number: prEvent.pull_request.number,
+            per_page: 100,
+            page: 1
+          })
+          // TODO: need to check the status
+          // reviews.status
+          core.info('Reviews: ' + JSON.stringify(reviews.data))
+          // octokit.rest.issues.createComment
           break
         default:
           core.info('IGNORE')
