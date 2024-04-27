@@ -14,6 +14,10 @@ export async function run(): Promise<void> {
   try {
     const ms: string = core.getInput('milliseconds')
     const token: string = core.getInput('token')
+
+    core.info('github1 ' + github)
+    core.info('github2 ' + JSON.stringify(github))
+
     const octokit = github.getOctokit(token)
 
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
