@@ -29220,13 +29220,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const github_1 = __importDefault(__nccwpck_require__(5438));
+const github = __importStar(__nccwpck_require__(5438));
 const wait_1 = __nccwpck_require__(5259);
 /**
  * The main function for the action.
@@ -29236,9 +29233,9 @@ async function run() {
     try {
         const ms = core.getInput('milliseconds');
         const token = core.getInput('token');
-        core.info('github1 ' + github_1.default);
-        core.info('github2 ' + JSON.stringify(github_1.default));
-        const octokit = github_1.default.getOctokit(token);
+        core.info('github1 ' + github);
+        core.info('github2 ' + JSON.stringify(github));
+        const octokit = github.getOctokit(token);
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         core.debug(`Waiting ${ms} milliseconds ...`);
         // Log the current timestamp, wait, then log the new timestamp
@@ -29247,14 +29244,14 @@ async function run() {
         core.debug(new Date().toTimeString());
         core.info('TESTING');
         // see https://docs.github.com/en/webhooks/webhook-events-and-payloads
-        if (github_1.default.context.eventName === 'pull_request') {
+        if (github.context.eventName === 'pull_request') {
             // see https://docs.github.com/en/webhooks/webhook-events-and-payloads#pull_request
-            switch (github_1.default.context.payload.action) {
+            switch (github.context.payload.action) {
                 case 'opened':
                 case 'reopened':
                 case 'synchronize':
                     core.info('Checking PR');
-                    const prEvent = github_1.default.context.payload;
+                    const prEvent = github.context.payload;
                     core.info(`The head commit is: ${prEvent.pull_request.head.ref}`);
                     core.info(`The PR number is: ${prEvent.pull_request.number}`);
                     break;
