@@ -1,4 +1,9 @@
 import * as core from '@actions/core'
+import github from '@actions/github'
+import {
+  PushEvent,
+  PullRequestEvent
+} from '@octokit/webhooks-definitions/schema'
 import { wait } from './wait'
 
 /**
@@ -8,6 +13,8 @@ import { wait } from './wait'
 export async function run(): Promise<void> {
   try {
     const ms: string = core.getInput('milliseconds')
+    const token: string = core.getInput('token')
+    const octokit = github.getOctokit(token)
 
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
     core.debug(`Waiting ${ms} milliseconds ...`)
@@ -18,6 +25,28 @@ export async function run(): Promise<void> {
     core.debug(new Date().toTimeString())
 
     core.info('TESTING')
+
+    // see https://docs.github.com/en/webhooks/webhook-events-and-payloads
+    if (github.context.eventName === 'pull_request') {
+      // see https://docs.github.com/en/webhooks/webhook-events-and-payloads#pull_request
+      switch (github.context.payload.action) {
+        case 'opened':
+        case 'reopened':
+        case 'synchronize':
+          core.info('Checking PR')
+          const prEvent = github.context.payload as PullRequestEvent
+          core.info(`The head commit is: ${prEvent.pull_request.head.ref}`)
+          core.info(`The PR number is: ${prEvent.pull_request.number}`)
+          break
+        default:
+          core.info('IGNORE')
+          break
+      }
+
+      // github.context.rep
+    }
+
+    // octokit.rest
 
     // Set outputs for other workflow steps to use
     core.setOutput('time', 'AAAA ' + new Date().toTimeString())
