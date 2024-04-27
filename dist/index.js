@@ -29265,7 +29265,17 @@ async function run() {
                     // TODO: need to check the status
                     // reviews.status
                     core.info('Reviews: ' + JSON.stringify(reviews.data));
-                    // octokit.rest.issues.createComment
+                    // TODO: remove existing comment by the bot first
+                    const commentRes = await octokit.rest.issues.createComment({
+                        owner: prEvent.repository.owner.login,
+                        repo: prEvent.repository.name,
+                        issue_number: prEvent.pull_request.number,
+                        body: 'Hello World ' +
+                            reviews.data.length +
+                            ' ' +
+                            new Date().toTimeString()
+                    });
+                    core.info('Comment response: ' + JSON.stringify(commentRes));
                     break;
                 default:
                     core.info('IGNORE');
