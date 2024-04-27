@@ -24965,8 +24965,9 @@ async function run() {
         core.debug(new Date().toTimeString());
         await (0, wait_1.wait)(parseInt(ms, 10));
         core.debug(new Date().toTimeString());
+        core.info('TESTING');
         // Set outputs for other workflow steps to use
-        core.setOutput('time', new Date().toTimeString());
+        core.setOutput('time', 'AAAA ' + new Date().toTimeString());
     }
     catch (error) {
         // Fail the workflow run if an error occurs
